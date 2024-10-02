@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
@@ -16,43 +17,44 @@ class API {
 
       return _validateStatus(response);
     } catch (e) {
-      print('Error: $e');
-      throw Exception(e);
+      log(': CLIENT/SERVER ERROR', name: 'API', error: e, level: 100);
+      return null;
+      // throw Exception(e);
     }
   }
 
   static List? _validateStatus(http.Response response) {
     switch (response.statusCode) {
       case 200:
-        log('[API] Plant fetched successfully');
+        log('Plant fetched successfully', name: 'API');
         return jsonDecode(response.body)['data'];
 
       case 201:
-        log('[API] Plant created successfully');
+        log('Plant created successfully', name: 'API');
         return jsonDecode(response.body)['data'];
 
       case 204:
-        log('[API] No content found');
+        log('No content found', name: 'API');
         return null;
 
       case 400:
-        log('[API] Bad Request');
+        log('Bad Request', name: 'API');
         return null;
 
       case 401:
-        log('[API] Unauthorized');
+        log('Unauthorized', name: 'API');
         return null;
 
       case 404:
-        log('[API] Not Found');
+        log('Not Found', name: 'API');
         return null;
 
       case 500:
-        log('[API] Internal Server Error');
+        log('Internal Server Error', name: 'API');
         return null;
 
       default:
-        log('[API] Service Unavailable');
+        log('Service Unavailable', name: 'API');
         return null;
     }
   }

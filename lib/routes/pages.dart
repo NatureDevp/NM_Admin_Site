@@ -17,7 +17,7 @@ class SystemPage {
   static const String _workplacepage = '/workplace';
 
   static get getInitialPage => _initial;
-  static get getLadingPage => _landing;
+  static get getLandingPage => _landing;
   static get getLoginPage => _login;
   static get getSignupPage => _signup;
   static get getMainpage => _mainpage;

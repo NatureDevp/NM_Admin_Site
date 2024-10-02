@@ -10,6 +10,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'dependencies/init.dart';
 import 'routes/pages.dart';
 import 'screens/landing.dart';
+import 'utils/_system.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,9 +23,8 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log(dotenv.env['BASE_URL'].toString());
-    API.getPlants();
     return GetMaterialApp(
+      debugShowCheckedModeBanner: IS_DEBUG_MODE,
       initialBinding: InitDependencies(),
       initialRoute: SystemPage.getInitialPage,
       getPages: SystemPage.routes,

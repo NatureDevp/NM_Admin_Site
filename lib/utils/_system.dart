@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../widgets/card.dart';
 import '../widgets/card2.dart.dart';
@@ -88,3 +89,5 @@ class SystemCard {
     );
   }
 }
+
+bool IS_DEBUG_MODE = dotenv.env['DEBUG_MODE'] == 'true';

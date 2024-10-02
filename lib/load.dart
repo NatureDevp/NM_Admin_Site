@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:admin_side/data/plants.dart';
 import 'package:admin_side/screens/landing.dart';
+import 'package:admin_side/utils/_system.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -23,7 +26,9 @@ class _InitialScreenState extends State<InitialScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return _loadingtResources('Loading Plant Resources');
           }
-
+          if (IS_DEBUG_MODE) {
+            return const LandingPage();
+          }
           if (snapshot.connectionState == ConnectionState.none) {
             return _resourceError('Resources failed to load');
           }
@@ -36,9 +41,6 @@ class _InitialScreenState extends State<InitialScreen> {
             return _resourceError('Resources failed to load');
           }
 
-          ALL_PLANTS = _getAllPlants(snapshot.data);
-
-          debugPrint(ALL_PLANTS.toString());
           return const LandingPage();
         },
       );
@@ -75,10 +77,11 @@ class _InitialScreenState extends State<InitialScreen> {
             Text(label),
             const Gap(20),
             ElevatedButton(
-                onPressed: () {
-                  setState(() {});
-                },
-                child: const Text('Retry')),
+              onPressed: () {
+                setState(() {});
+              },
+              child: const Text('Retry'),
+            ),
           ],
         ),
       )),
