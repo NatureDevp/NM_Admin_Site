@@ -109,7 +109,7 @@ class SidebarDesktop extends StatelessWidget {
 //
 
   int identifyPage(int index) {
-    List<int> requestpage = [1, 4, 5];
+    List<int> requestpage = [1, 4, 5, 6];
 
     if (requestpage.contains(index)) {
       return 1;

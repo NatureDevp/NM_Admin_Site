@@ -4,16 +4,17 @@ import 'package:get/get.dart';
 import '../utils/_system.dart';
 
 class TopNavigation extends StatelessWidget {
-  TopNavigation(
-      {super.key, required this.label, required this.back, required this.goTo});
+  TopNavigation({super.key, this.label = '', required this.back, this.goTo});
   String label;
   Function()? back;
   Function()? goTo;
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: label == ''
+          ? MainAxisAlignment.start
+          : MainAxisAlignment.spaceBetween,
       children: [
         TextButton.icon(
           style: ButtonStyle(

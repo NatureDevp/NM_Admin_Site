@@ -1,3 +1,4 @@
+import 'package:admin_side/screens/pages/request/req_info.dart';
 import 'package:admin_side/screens/pages/request/req_list.dart';
 import 'package:admin_side/screens/pages/workplace/work.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class SidebarController extends GetxController {
         selectedPage.value = Dashboard();
         break;
       case 1:
-        selectedPage.value = RequestPage();
+        selectedPage.value = const RequestPage();
         break;
       case 2:
         selectedPage.value = const PlantPage();
@@ -39,6 +40,9 @@ class SidebarController extends GetxController {
         break;
       case 5:
         selectedPage.value = const WorkplacePage();
+        break;
+      case 6:
+        selectedPage.value = const RequestInformation();
         break;
       default:
         selectedPage.value = Dashboard();
@@ -64,6 +68,12 @@ class SidebarController extends GetxController {
         break;
       case 5:
         titlePage.value = 'Workplace';
+        break;
+      case 5:
+        titlePage.value = 'Workplace';
+        break;
+      case 6:
+        titlePage.value = 'Request Information';
         break;
       default:
         titlePage.value = 'Dashboard';

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:admin_side/data/plants.dart';
+import 'package:admin_side/screens/home.dart';
 import 'package:admin_side/screens/landing.dart';
 import 'package:admin_side/utils/_system.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class _InitialScreenState extends State<InitialScreen> {
             return _loadingtResources('Loading Plant Resources');
           }
           if (IS_DEBUG_MODE) {
-            return const LandingPage();
+            return const HomeScreen();
           }
           if (snapshot.connectionState == ConnectionState.none) {
             return _resourceError('Resources failed to load');
@@ -41,7 +42,7 @@ class _InitialScreenState extends State<InitialScreen> {
             return _resourceError('Resources failed to load');
           }
 
-          return const LandingPage();
+          return const HomeScreen();
         },
       );
     } catch (e) {

@@ -34,7 +34,7 @@ class RequestListPage extends StatelessWidget {
                 controller.selectButton(1);
               },
               goTo: () {
-                 controller.selectButton(5);
+                controller.selectButton(5);
               },
             ),
           ),
@@ -51,11 +51,8 @@ class RequestListPage extends StatelessWidget {
   }
 }
 
-
-
 ///
 ///
-
 
 class RequestGridTable extends StatelessWidget {
   RequestGridTable({super.key}) : _dataGridSource = _CustomDataGridSource();
@@ -64,8 +61,12 @@ class RequestGridTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SidebarController sidebarController = Get.find<SidebarController>();
     //
     return SfDataGrid(
+      onCellDoubleTap: (details) {
+        sidebarController.selectButton(6);
+      },
       checkboxShape: const BeveledRectangleBorder(),
       source: _dataGridSource,
       allowSorting: true,
