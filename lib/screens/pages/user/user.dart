@@ -1,7 +1,9 @@
+import 'package:admin_side/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../../../data/request.dart';
+import '../../../data/user.dart';
 import '../../../models/request.dart';
 
 class UserPage extends StatelessWidget {
@@ -15,9 +17,6 @@ class UserPage extends StatelessWidget {
     );
   }
 }
-
-
-
 
 class UserDataTable extends StatelessWidget {
   UserDataTable({super.key}) : _dataGridSource = _CustomDataGridSource();
@@ -34,28 +33,24 @@ class UserDataTable extends StatelessWidget {
       columnWidthMode: ColumnWidthMode.fill,
       columns: [
         GridColumn(
-          columnName: REQUEST_COLUMNS.id,
-          label: _header_Style(REQUEST_COLUMNS.id),
+          columnName: USER_COLUMNS.id,
+          label: _header_Style(USER_COLUMNS.id),
         ),
         GridColumn(
-          columnName: REQUEST_COLUMNS.plant,
-          label: _header_Style(REQUEST_COLUMNS.plant),
+          columnName: USER_COLUMNS.name,
+          label: _header_Style(USER_COLUMNS.name),
         ),
         GridColumn(
-          columnName: REQUEST_COLUMNS.imageUrl,
-          label: _header_Style(REQUEST_COLUMNS.imageUrl),
+          columnName: USER_COLUMNS.email,
+          label: _header_Style(USER_COLUMNS.email),
         ),
         GridColumn(
-          columnName: REQUEST_COLUMNS.requestDate,
-          label: _header_Style(REQUEST_COLUMNS.requestDate),
+          columnName: USER_COLUMNS.dateCreated,
+          label: _header_Style(USER_COLUMNS.dateCreated),
         ),
         GridColumn(
-          columnName: REQUEST_COLUMNS.status,
-          label: _header_Style(REQUEST_COLUMNS.status),
-        ),
-        GridColumn(
-          columnName: REQUEST_COLUMNS.lastUpdated,
-          label: _header_Style(REQUEST_COLUMNS.lastUpdated),
+          columnName: USER_COLUMNS.lastUpdated,
+          label: _header_Style(USER_COLUMNS.lastUpdated),
         ),
       ],
     );
@@ -74,37 +69,33 @@ class UserDataTable extends StatelessWidget {
 }
 
 class _CustomDataGridSource extends DataGridSource {
-  List<Request> requestData = REQUESTS;
+  List<User> userData = ALL_USERS;
   List<DataGridRow> _dataGridRows = [];
 
   _CustomDataGridSource() {
     //
     _dataGridRows = List.generate(
-      requestData.length,
+      userData.length,
       (index) => DataGridRow(cells: [
         DataGridCell<String>(
           columnName: REQUEST_COLUMNS.id,
-          value: requestData[index].id,
+          value: userData[index].id,
         ),
         DataGridCell<String>(
           columnName: REQUEST_COLUMNS.plant,
-          value: requestData[index].plant,
+          value: userData[index].name,
         ),
         DataGridCell<String>(
           columnName: REQUEST_COLUMNS.imageUrl,
-          value: requestData[index].imageUrl,
+          value: userData[index].email,
         ),
         DataGridCell<String>(
           columnName: REQUEST_COLUMNS.requestDate,
-          value: requestData[index].requestDate,
+          value: userData[index].dateCreated,
         ),
         DataGridCell<String>(
           columnName: REQUEST_COLUMNS.status,
-          value: requestData[index].status,
-        ),
-        DataGridCell<String>(
-          columnName: REQUEST_COLUMNS.lastUpdated,
-          value: requestData[index].lastUpdated,
+          value: userData[index].lastUpdated,
         ),
       ]),
     );
