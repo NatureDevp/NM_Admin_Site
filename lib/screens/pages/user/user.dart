@@ -1,10 +1,11 @@
+import 'package:admin_side/controllers/sidebar.dart';
 import 'package:admin_side/models/user.dart';
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+import 'package:get/get.dart'; // For navigation
 
-import '../../../data/request.dart';
 import '../../../data/user.dart';
-import '../../../models/request.dart';
+import 'user_info.dart'; // Import the user information page
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class UserPage extends StatelessWidget {
   const UserPage({super.key});
@@ -25,12 +26,18 @@ class UserDataTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //
+    SidebarController sidebarController = Get.find<SidebarController>();
     return SfDataGrid(
-      checkboxShape: const BeveledRectangleBorder(),
       source: _dataGridSource,
-      allowSorting: true,
       columnWidthMode: ColumnWidthMode.fill,
+      onCellTap: (details) {
+        if (details.rowColumnIndex.rowIndex != 0) {
+          int selectedIndex = details.rowColumnIndex.rowIndex - 1;
+          User selectedUser = _dataGridSource.userData[selectedIndex];
+
+          sidebarController.selectButton(7, args: selectedUser);
+        }
+      },
       columns: [
         GridColumn(
           columnName: USER_COLUMNS.id,
@@ -69,32 +76,31 @@ class UserDataTable extends StatelessWidget {
 }
 
 class _CustomDataGridSource extends DataGridSource {
-  List<User> userData = ALL_USERS;
+  List<User> userData = ALL_USERS; // Replace with real user data
   List<DataGridRow> _dataGridRows = [];
 
   _CustomDataGridSource() {
-    //
     _dataGridRows = List.generate(
       userData.length,
       (index) => DataGridRow(cells: [
         DataGridCell<String>(
-          columnName: REQUEST_COLUMNS.id,
+          columnName: USER_COLUMNS.id,
           value: userData[index].id,
         ),
         DataGridCell<String>(
-          columnName: REQUEST_COLUMNS.plant,
+          columnName: USER_COLUMNS.name,
           value: userData[index].name,
         ),
         DataGridCell<String>(
-          columnName: REQUEST_COLUMNS.imageUrl,
+          columnName: USER_COLUMNS.email,
           value: userData[index].email,
         ),
         DataGridCell<String>(
-          columnName: REQUEST_COLUMNS.requestDate,
+          columnName: USER_COLUMNS.dateCreated,
           value: userData[index].dateCreated,
         ),
         DataGridCell<String>(
-          columnName: REQUEST_COLUMNS.status,
+          columnName: USER_COLUMNS.lastUpdated,
           value: userData[index].lastUpdated,
         ),
       ]),
@@ -116,14 +122,10 @@ class _CustomDataGridSource extends DataGridSource {
     return Container(
       padding: const EdgeInsets.all(8.0),
       alignment: Alignment.centerLeft,
-      child: (cell.columnName == REQUEST_COLUMNS.imageUrl)
-          ? Image.asset(
-              cell.value.toString(),
-            )
-          : Text(
-              cell.value.toString(),
-              style: const TextStyle(fontWeight: FontWeight.normal),
-            ),
+      child: Text(
+        cell.value.toString(),
+        style: const TextStyle(fontWeight: FontWeight.normal),
+      ),
     );
   }
 }

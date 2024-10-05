@@ -13,6 +13,8 @@ class API {
       final response = await http.get(url, headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true',
+        'Authorization':
+            'Bearer 2|JUKXBgwngvsqxwN5lkdp8BNZo0fVPfMImbMgz9QD83b51350'
       });
 
       return _validateStatus(response);

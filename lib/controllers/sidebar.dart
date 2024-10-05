@@ -1,5 +1,8 @@
+import 'package:admin_side/models/user.dart';
+import 'package:admin_side/screens/pages/plant/plant_info.dart';
 import 'package:admin_side/screens/pages/request/req_info.dart';
 import 'package:admin_side/screens/pages/request/req_list.dart';
+import 'package:admin_side/screens/pages/user/user_info.dart';
 import 'package:admin_side/screens/pages/workplace/work.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,13 +18,14 @@ class SidebarController extends GetxController {
   RxString titlePage = 'Dashboard'.obs;
 
   //
-  void selectButton(int index) {
+  void selectButton(int index, {args = null}) {
     selectedButtonIndex.value = index;
-    selectPage(index);
+    selectPage(index, args: args);
+
     selectTitle(index);
   }
 
-  void selectPage(int index) {
+  void selectPage(int index, {args = null}) {
     switch (index) {
       case 0:
         selectedPage.value = Dashboard();
@@ -43,6 +47,12 @@ class SidebarController extends GetxController {
         break;
       case 6:
         selectedPage.value = const RequestInformation();
+        break;
+      case 7:
+        selectedPage.value = const PlantInfo();
+        break;
+      case 8:
+        selectedPage.value = UserInfoPage(user: args! as User);
         break;
       default:
         selectedPage.value = Dashboard();
@@ -74,6 +84,12 @@ class SidebarController extends GetxController {
         break;
       case 6:
         titlePage.value = 'Request Information';
+        break;
+      case 7:
+        titlePage.value = 'Plant Information';
+        break;
+      case 8:
+        titlePage.value = 'User Information';
         break;
       default:
         titlePage.value = 'Dashboard';

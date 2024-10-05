@@ -41,7 +41,7 @@ class _InitialScreenState extends State<InitialScreen> {
           if (!snapshot.hasData) {
             return _resourceError('Resources failed to load');
           }
-
+          ALL_PLANTS = _getAllPlants(snapshot.data);
           return const HomeScreen();
         },
       );

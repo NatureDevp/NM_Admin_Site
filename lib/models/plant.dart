@@ -3,30 +3,33 @@ import 'package:intl/intl.dart';
 class Plants {
   Plants(
       {required this.id,
-      required this.plant,
+      required this.name,
       required this.scientificName,
       required this.imageUrl,
       required this.likes,
+      required this.status,
       required this.description,
       required this.dateCreated,
       required this.lastUpdated});
 
   final int id;
-  final String plant;
+  final String name;
   final String scientificName;
   final String imageUrl;
   final String description;
   final int likes;
+  final String status;
   final String dateCreated;
   final String lastUpdated;
 
   factory Plants.fromJson(Map<String, dynamic> json) {
     return Plants(
       id: json['id'],
-      plant: _arrangeName(json['name']),
+      name: _arrangeName(json['name']),
       scientificName: json['scientific'],
       imageUrl: json['image'],
       likes: json['likes'],
+      status: json['status'],
       description: json['description'],
       dateCreated: _parseToDate(json['created_at']),
       lastUpdated: _parseToDate(json['updated_at']),
@@ -52,4 +55,28 @@ class Plants {
       return word;
     }).join(' ');
   }
+}
+
+class PlantColumn {
+  PlantColumn({
+    required this.id,
+    required this.name,
+    required this.scientificName,
+    required this.imageUrl,
+    required this.likes,
+    required this.description,
+    required this.status,
+    required this.dateCreated,
+    required this.lastUpdated,
+  });
+
+  final String id;
+  final String name;
+  final String scientificName;
+  final String imageUrl;
+  final String description;
+  final String likes;
+  final String status;
+  final String dateCreated;
+  final String lastUpdated;
 }
