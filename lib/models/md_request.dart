@@ -20,7 +20,7 @@ class RequestPlant {
   final String scientific_name;
   final String description;
   final String image_url;
-  final int handle_by;
+  int? handle_by;
   final String status;
   final String last_updated;
   final String date_created;
@@ -28,16 +28,16 @@ class RequestPlant {
   // Factory method to create an instance from JSON
   factory RequestPlant.fromJson(Map<String, dynamic> json) {
     return RequestPlant(
-      id: json['id'] as int,
-      user_id: json['user_id'] as int,
-      plant_name: _arrangeName(json['plant_name'] as String?),
-      scientific_name: _arrangeName(json['scientific'] as String?),
-      description: json['description'] as String,
-      image_url: json['image_path'] as String,
-      handle_by: json['handle_by'] as int,
-      status: json['status'] as String,
-      last_updated: _parseToDate(json['updated_at'] as String?),
-      date_created: _parseToDate(json['created_at'] as String?),
+      id: json['id'],
+      user_id: json['user_id'],
+      plant_name: _arrangeName(json['plant_name']),
+      scientific_name: _arrangeName(json['scientific']),
+      description: json['description'],
+      image_url: json['image_path'],
+      handle_by: json['handle_by'],
+      status: json['status'],
+      last_updated: _parseToDate(json['updated_at']),
+      date_created: _parseToDate(json['created_at']),
     );
   }
 

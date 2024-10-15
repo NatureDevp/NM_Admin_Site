@@ -1,8 +1,11 @@
 import 'dart:developer';
 import 'package:admin_new/controllers/ct_plant.dart';
+import 'package:admin_new/controllers/ct_request.dart';
+import 'package:admin_new/models/md_request.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/request/request.dart';
 
 import '../../utils/_colors.dart';
 import '../../utils/_screen_sizes.dart';
@@ -16,6 +19,7 @@ class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //
+
     return LayoutBuilder(builder: (context, constraints) {
       screen = Screen.constraints(constraints);
 
@@ -75,6 +79,7 @@ class Dashboard extends StatelessWidget {
 
 //
   Widget _dataChart() {
+    var ctRequest = Get.find<RequestController>();
     var ctPlant = Get.find<PlantController>();
     return Row(
       mainAxisSize: MainAxisSize.max,
@@ -310,7 +315,7 @@ class DashboardCard extends StatelessWidget {
 
 //===============================
 
-class DashboardRequestCard extends StatelessWidget {
+class DashboardRequestCard extends GetView<RequestController> {
   DashboardRequestCard(
     this.screen, {
     super.key,
@@ -394,22 +399,23 @@ class DashboardRequestCard extends StatelessWidget {
   Widget _cardBody() {
     return LayoutBuilder(builder: (context, constraint) {
       return SizedBox(
-        height: constraint.maxHeight,
-        child: ListView.builder(
-            padding: EdgeInsets.symmetric(vertical: screen.width * 0.01),
-            shrinkWrap: true,
-            itemCount: 8,
-            itemBuilder: (_, index) {
-              return InkWell(
-                onTap: () {},
-                child: _cardTile(),
-              );
-            }),
-      );
+          height: constraint.maxHeight,
+          child: ListView.builder(
+              padding: EdgeInsets.symmetric(vertical: screen.width * 0.01),
+              shrinkWrap: true,
+              itemCount: controller.pendingRequestData.value.length,
+              itemBuilder: (_, index) {
+                List<RequestPlant> requests =
+                    controller.pendingRequestData.value;
+                return InkWell(
+                  onTap: () {},
+                  child: _cardTile(requests[index]),
+                );
+              }));
     });
   }
 
-  Widget _cardTile() {
+  Widget _cardTile(RequestPlant request) {
     return Card(
       color: CustomColors.light.normal,
       elevation: 2,
@@ -422,9 +428,9 @@ class DashboardRequestCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            _plantDetail(),
+            _plantDetail(request),
             Gap(screen.width * 0.06),
-            _requestDetail(),
+            _requestDetail(request),
             const Spacer(),
             _banner(),
           ],
@@ -433,7 +439,7 @@ class DashboardRequestCard extends StatelessWidget {
     );
   }
 
-  Widget _plantDetail() {
+  Widget _plantDetail(RequestPlant request) {
     return Row(
       children: [
         Image.asset(
@@ -446,7 +452,7 @@ class DashboardRequestCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             Text(
-              'Tawa-tawa',
+              request.plant_name,
               style: TextStyle(
                 fontSize: screen.width * 0.0125,
                 fontWeight: FontWeight.bold,
@@ -454,7 +460,7 @@ class DashboardRequestCard extends StatelessWidget {
               ),
             ),
             Text(
-              '[Euphorbia hirta]',
+              '[${request.scientific_name}]',
               style: TextStyle(
                 fontSize: screen.width * 0.009,
                 fontWeight: FontWeight.w400,
@@ -468,13 +474,13 @@ class DashboardRequestCard extends StatelessWidget {
   }
 
 //
-  Widget _requestDetail() {
+  Widget _requestDetail(RequestPlant request) {
     return Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'June 06, 2024',
+            request.date_created,
             style: TextStyle(
               fontSize: screen.width * 0.011,
               fontWeight: FontWeight.w800,

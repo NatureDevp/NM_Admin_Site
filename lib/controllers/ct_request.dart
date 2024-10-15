@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:admin_new/api/api_request.dart';
-import 'package:admin_new/models/md_request.dart';
 import 'package:get/get.dart';
+
+import '../api/api_request.dart';
+import '../models/md_request.dart';
 
 class RequestController extends GetxController {
   @override
@@ -24,11 +25,11 @@ class RequestController extends GetxController {
   }
 
   Timer? _timer;
-  var plantData = <RequestPlant>[].obs;
+  var requestData = <RequestPlant>[].obs;
   var errorMessage = ''.obs;
   var isLoading = false.obs;
-  var activePlantCount = 0.obs;
-  var totalPants = 0.obs;
+  var pendingRequestData = <RequestPlant>[].obs;
+  var totalRequestPants = 0.obs;
 
   Future<void> _loadRequests() async {
     isLoading.value = true;
@@ -51,7 +52,7 @@ class RequestController extends GetxController {
       return;
     }
 
-    plantData.value = convertToPlants(result['data']);
+    requestData.value = convertToPlants(result['data']);
 
     isLoading.value = false;
     errorMessage.value = '';
@@ -75,25 +76,24 @@ class RequestController extends GetxController {
       return;
     }
 
-    plantData.value = convertToPlants(result['data']);
+    requestData.value = convertToPlants(result['data']);
     errorMessage.value = '';
   }
 
   void loadAllData() {
     _loadRequests();
-    _activeCounter();
-    _totalPlantCounter();
+    _fetchPendingRequests();
+    _totalRequestCounter();
   }
 
-  void _activeCounter() {
-    activePlantCount.value = plantData.value
-        .where((element) => element.status.toLowerCase() == 'active')
-        .toList()
-        .length;
+  void _fetchPendingRequests() {
+    pendingRequestData.value = requestData.value
+        .where((element) => element.status.toLowerCase() == 'Pending')
+        .toList();
   }
 
-  void _totalPlantCounter() {
-    totalPants.value = plantData.value.length;
+  void _totalRequestCounter() {
+    totalRequestPants.value = requestData.value.length;
   }
 
   List<RequestPlant> convertToPlants(List data) {
@@ -101,14 +101,14 @@ class RequestController extends GetxController {
   }
 
   void dataRefresh() {
-    _timer = Timer.periodic(const Duration(seconds: 8), (Timer t) {
+    _timer = Timer.periodic(const Duration(seconds: 3), (Timer t) {
       if (errorMessage.value.isNotEmpty) {
         _timer?.cancel();
         return;
       }
       _fetchRequests();
-      _activeCounter();
-      _totalPlantCounter();
+      _fetchPendingRequests();
+      _totalRequestCounter();
     });
   }
 }

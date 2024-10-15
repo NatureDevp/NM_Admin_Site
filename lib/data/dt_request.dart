@@ -79,6 +79,10 @@ List<DataGridRow> requestRows(List<RequestPlant> requests) {
               columnName: col_plantPicture,
               value: request.image_url,
             ),
+            DataGridCell<dynamic>(
+              columnName: col_handleBy,
+              value: request.handle_by,
+            ),
             DataGridCell<String>(
               columnName: col_plantStatus,
               value: request.status,
@@ -98,11 +102,13 @@ List<DataGridRow> requestRows(List<RequestPlant> requests) {
 // ----------------------------------------------------------------------------
 // REQUEST DATA SOURCE
 class RequestDataSource extends DataGridSource {
-  // instantiate USER REQUEST LIST DATA CONTROLLER HERE
-  // todo: ADD to REQUEST_controller List of List<UserRequest>
+  RequestDataSource(List<RequestPlant> rows) {
+    data = rows;
+  }
 
+  late var data;
   @override
-  List<DataGridRow> get rows => requestRows(REQUEST_ROWS_DATA);
+  List<DataGridRow> get rows => requestRows(data);
 
   @override
   DataGridRowAdapter buildRow(DataGridRow row) {
@@ -126,7 +132,8 @@ class RequestDataSource extends DataGridSource {
       case col_plantLastUpdated:
         return Text(value, overflow: TextOverflow.ellipsis);
       case col_plantPicture:
-        return Image.asset(value);
+        // return Image.asset(value);
+        return Text(value);
       default:
         return Text(value);
     }
