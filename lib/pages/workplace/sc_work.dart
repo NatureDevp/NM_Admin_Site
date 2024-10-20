@@ -80,9 +80,9 @@ class TabBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      var filteredPlants = controller.plantRequests
-          .where((plant) =>
-              statusFilter == 'All' || plant['status'] == statusFilter)
+      var filteredPlants = controller.workplaceRequests.value
+          .where(
+              (plant) => statusFilter == 'All' || plant.status == statusFilter)
           .toList();
 
       return GridView.builder(
@@ -101,9 +101,9 @@ class TabBody extends StatelessWidget {
           }
           var plant = filteredPlants[index - 1];
           return PlantCard(
-            plantname: plant['name'],
-            status: plant['status'],
-            date: plant['date'],
+            plantname: plant.plant_name,
+            status: plant.status,
+            date: plant.last_updated,
             plantimage: 'assets/plantImages/plant1.png',
             ontap: () {},
           );

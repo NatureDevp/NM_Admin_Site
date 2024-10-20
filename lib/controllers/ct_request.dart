@@ -88,7 +88,7 @@ class RequestController extends GetxController {
 
   void _fetchPendingRequests() {
     pendingRequestData.value = requestData.value
-        .where((element) => element.status.toLowerCase() == 'Pending')
+        .where((element) => element.status.toLowerCase() == 'pending')
         .toList();
   }
 

@@ -61,7 +61,7 @@ class RequestPlant {
     }
     try {
       DateTime date = DateTime.parse(dateStr).toLocal();
-      return DateFormat('MMMM d, yyyy at h:mm a').format(date);
+      return DateFormat('MMM d, yyyy \'at\' h:mm a').format(date);
     } catch (e) {
       return 'Invalid Date';
     }

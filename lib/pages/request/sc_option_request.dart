@@ -1,4 +1,5 @@
 import 'package:admin_new/pages/request/sc_list_request.dart';
+import 'package:admin_new/pages/workplace/sc_work.dart';
 import 'package:admin_new/utils/_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -43,7 +44,13 @@ class RequestOptionPage extends StatelessWidget {
               subtitle:
                   'We can easily Track, Find and Create new and finish request.',
               isNew: true,
-              onTap: () {},
+              onTap: () {
+                ctSidebar.changeScreen(
+                  ctSidebar.request,
+                  'My Workplace',
+                  screen: const WorkplacePage(),
+                );
+              },
             ),
           ],
         ),

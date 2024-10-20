@@ -1,11 +1,9 @@
-import 'dart:developer';
 import 'package:admin_new/controllers/ct_plant.dart';
 import 'package:admin_new/controllers/ct_request.dart';
 import 'package:admin_new/models/md_request.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/request/request.dart';
 
 import '../../utils/_colors.dart';
 import '../../utils/_screen_sizes.dart';
@@ -400,18 +398,20 @@ class DashboardRequestCard extends GetView<RequestController> {
     return LayoutBuilder(builder: (context, constraint) {
       return SizedBox(
           height: constraint.maxHeight,
-          child: ListView.builder(
-              padding: EdgeInsets.symmetric(vertical: screen.width * 0.01),
-              shrinkWrap: true,
-              itemCount: controller.pendingRequestData.value.length,
-              itemBuilder: (_, index) {
-                List<RequestPlant> requests =
-                    controller.pendingRequestData.value;
-                return InkWell(
-                  onTap: () {},
-                  child: _cardTile(requests[index]),
-                );
-              }));
+          child: Obx(() {
+            return ListView.builder(
+                padding: EdgeInsets.symmetric(vertical: screen.width * 0.01),
+                shrinkWrap: true,
+                itemCount: controller.pendingRequestData.value.length,
+                itemBuilder: (_, index) {
+                  List<RequestPlant> requests =
+                      controller.pendingRequestData.value;
+                  return InkWell(
+                    onTap: () {},
+                    child: _cardTile(requests[index]),
+                  );
+                });
+          }));
     });
   }
 
@@ -424,15 +424,21 @@ class DashboardRequestCard extends GetView<RequestController> {
           vertical: screen.width * 0.01,
           horizontal: screen.width * 0.02,
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: Stack(
+          alignment: Alignment.center,
           children: [
-            _plantDetail(request),
-            Gap(screen.width * 0.06),
-            _requestDetail(request),
-            const Spacer(),
-            _banner(),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: _plantDetail(request),
+            ),
+            Align(
+              alignment: const Alignment(0.3, 0),
+              child: _requestDetail(request),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: _banner(),
+            ),
           ],
         ),
       ),
@@ -444,9 +450,9 @@ class DashboardRequestCard extends GetView<RequestController> {
       children: [
         Image.asset(
           'assets/images/image1.png',
-          height: screen.width * 0.04,
+          height: screen.width * 0.03,
         ),
-        Gap(screen.width * 0.02),
+        Gap(screen.width * 0.009),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
@@ -454,13 +460,13 @@ class DashboardRequestCard extends GetView<RequestController> {
             Text(
               request.plant_name,
               style: TextStyle(
-                fontSize: screen.width * 0.0125,
+                fontSize: screen.width * 0.009,
                 fontWeight: FontWeight.bold,
                 color: CustomColors.dark.normal,
               ),
             ),
             Text(
-              '[${request.scientific_name}]',
+              request.scientific_name,
               style: TextStyle(
                 fontSize: screen.width * 0.009,
                 fontWeight: FontWeight.w400,
@@ -482,7 +488,7 @@ class DashboardRequestCard extends GetView<RequestController> {
           Text(
             request.date_created,
             style: TextStyle(
-              fontSize: screen.width * 0.011,
+              fontSize: screen.width * 0.008,
               fontWeight: FontWeight.w800,
               color: CustomColors.dark.normal,
             ),
