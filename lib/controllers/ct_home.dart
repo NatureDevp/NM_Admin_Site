@@ -12,14 +12,13 @@ class HomePageController extends GetxController {
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    loadAllData();
   }
 
   @override
   void onReady() {
     // TODO: implement onReady
     super.onReady();
-    redirectToLandingPage();
+    loadAllData();
   }
 
   String pageTitle = 'NatureMedix | Admin';
@@ -69,7 +68,7 @@ class HomePageController extends GetxController {
 
   void redirectToLandingPage() {
     if (isRedirecting.value) {
-      Get.offAllNamed(Routes.getInitialPage);
+      Get.offAllNamed(Routes.getLandingPage);
       isRedirecting.value = false;
     }
   }

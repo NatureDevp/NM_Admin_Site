@@ -1,9 +1,14 @@
 import 'package:admin_new/controllers/ct_plant.dart';
 import 'package:admin_new/controllers/ct_request.dart';
+import 'package:admin_new/controllers/ct_workplace.dart';
+import 'package:admin_new/data/dt_workplace.dart';
 import 'package:admin_new/models/md_request.dart';
+import 'package:admin_new/pages/request/sc_request_info.dart';
+import 'package:admin_new/utils/_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../../utils/_colors.dart';
 import '../../utils/_screen_sizes.dart';
@@ -35,7 +40,7 @@ class Dashboard extends StatelessWidget {
               Gap(screen.width * 0.030),
               _tableTitleStyle(),
               Gap(screen.width * 0.009),
-              const RequestTable(),
+              const WorkplaceTable(),
             ],
           ),
         ),
@@ -311,6 +316,22 @@ class DashboardCard extends StatelessWidget {
   }
 }
 
+class WorkplaceTable extends GetView<WorkplaceController> {
+  const WorkplaceTable({
+    super.key,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      return SfDataGrid(
+        source: WorkplaceDataSource(controller.workplaceRequests.value),
+        allowSorting: true,
+        columnWidthMode: ColumnWidthMode.fill,
+        columns: workplaceColumns(),
+      );
+    });
+  }
+}
 //===============================
 
 class DashboardRequestCard extends GetView<RequestController> {
@@ -407,7 +428,10 @@ class DashboardRequestCard extends GetView<RequestController> {
                   List<RequestPlant> requests =
                       controller.pendingRequestData.value;
                   return InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      controller.selectRequest(requests[index]);
+                      Get.toNamed(Routes.getRequestInfoPage);
+                    },
                     child: _cardTile(requests[index]),
                   );
                 });

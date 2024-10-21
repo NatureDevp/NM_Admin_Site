@@ -95,7 +95,7 @@ class SignupPage extends GetView<SignupPageController> {
       QuickAlert.show(
         context: Get.context!,
         type: QuickAlertType.warning,
-        title: 'Login failed!',
+        title: 'Registration failed!',
         text: 'Something went wrong. Please try again.',
         confirmBtnText: 'Ok',
         confirmBtnColor: CustomColors.error.normal,

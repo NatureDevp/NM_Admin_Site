@@ -101,7 +101,7 @@ class PlantController extends GetxController {
   }
 
   void dataRefresh() {
-    _timer = Timer.periodic(const Duration(seconds: 8), (Timer t) {
+    _timer = Timer.periodic(const Duration(seconds: 3), (Timer t) {
       if (errorMessage.value.isNotEmpty) {
         _timer?.cancel();
         return;

@@ -1,36 +1,12 @@
+import 'package:admin_new/models/md_request.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class RequestInfo extends StatefulWidget {
-  final String id;
-  final String userId;
-  final String plantName;
-  final String scientificName;
-  final String description;
-  final String imageUrl;
-  final String handleBy;
-  final String status;
-  final String lastUpdated;
-  final String dateCreated;
+import '../../controllers/ct_request.dart';
 
-  const RequestInfo({
-    Key? key,
-    required this.id,
-    required this.userId,
-    required this.plantName,
-    required this.scientificName,
-    required this.description,
-    required this.imageUrl,
-    required this.handleBy,
-    required this.status,
-    required this.lastUpdated,
-    required this.dateCreated,
-  }) : super(key: key);
+class RequestInfoPage extends GetView<RequestController> {
+  const RequestInfoPage({super.key});
 
-  @override
-  State<RequestInfo> createState() => _RequestInfoState();
-}
-
-class _RequestInfoState extends State<RequestInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,12 +47,30 @@ class _RequestInfoState extends State<RequestInfo> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildTextField('ID:', widget.id),
-                            _buildTextField('User_ID:', widget.userId),
-                            _buildTextField('Plant Name:', widget.plantName),
-                            _buildTextField('Scientific Name:', widget.scientificName),
-                            _buildMultiLineTextField('Plant Description:', widget.description),
-                            _buildTextField('Handle by:', widget.handleBy),
+                            _buildTextField(
+                                'ID:',
+                                controller.selectedRequest.value!.id
+                                    .toString()),
+                            _buildTextField(
+                                'User_ID:',
+                                controller.selectedRequest.value!.user_id
+                                    .toString()),
+                            _buildTextField('Plant Name:',
+                                controller.selectedRequest.value!.plant_name),
+                            _buildTextField(
+                                'Scientific Name:',
+                                controller
+                                    .selectedRequest.value!.scientific_name),
+                            _buildMultiLineTextField('Plant Description:',
+                                controller.selectedRequest.value!.description),
+                            _buildTextField(
+                              'Handle by:',
+                              controller.selectedRequest.value!.handle_by !=
+                                      null
+                                  ? controller.selectedRequest.value!.handle_by
+                                      .toString()
+                                  : 'None',
+                            ),
                           ],
                         ),
                       ),
@@ -86,7 +80,11 @@ class _RequestInfoState extends State<RequestInfo> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildImageSection('Plant Image:', widget.imageUrl),
+                            _buildImageSection(
+                              'Plant Image:',
+                              // 'assets/${controller.selectedRequest.value!.image_url}',
+                              'assets/images/image1.png',
+                            ),
                           ],
                         ),
                       ),
@@ -96,11 +94,15 @@ class _RequestInfoState extends State<RequestInfo> {
                   Row(
                     children: [
                       Expanded(
-                        child: _buildTextField('Last Update:', widget.lastUpdated),
+                        child: _buildTextField('Last Update:',
+                            controller.selectedRequest.value!.last_updated),
                       ),
                       const SizedBox(width: 20),
                       Expanded(
-                        child: _buildTextField('Date Created:', widget.dateCreated),
+                        child: _buildTextField(
+                          'Date Created:',
+                          controller.selectedRequest.value!.date_created,
+                        ),
                       ),
                     ],
                   ),
@@ -170,7 +172,7 @@ class _RequestInfoState extends State<RequestInfo> {
               borderRadius: BorderRadius.circular(8),
             ),
             child: imageUrl.isNotEmpty
-                ? Image.network(imageUrl, fit: BoxFit.cover)
+                ? Image.asset(imageUrl, fit: BoxFit.cover)
                 : const Icon(Icons.image, size: 80, color: Colors.grey),
           ),
         ],

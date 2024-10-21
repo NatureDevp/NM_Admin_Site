@@ -5,12 +5,11 @@ import 'package:get/get.dart';
 import '../../controllers/ct_workplace.dart';
 import '../../utils/_colors.dart';
 
-class WorkplacePage extends StatelessWidget {
+class WorkplacePage extends GetView<WorkplaceController> {
   const WorkplacePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ctWorkplace = Get.put(WorkplaceController());
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
@@ -30,7 +29,7 @@ class WorkplacePage extends StatelessWidget {
                         Tab(text: 'In progress'),
                         Tab(text: 'Completed'),
                       ],
-                      controller: ctWorkplace.tabController,
+                      controller: controller.tabController,
                       indicatorColor: CustomColors.primary.normal,
                       tabAlignment: TabAlignment.start,
                       isScrollable: true,
@@ -45,18 +44,18 @@ class WorkplacePage extends StatelessWidget {
                     ),
                     Expanded(
                       child: TabBarView(
-                        controller: ctWorkplace.tabController,
+                        controller: controller.tabController,
                         children: [
                           TabBody(
-                            controller: ctWorkplace,
+                            controller: controller,
                             statusFilter: 'All',
                           ),
                           TabBody(
-                            controller: ctWorkplace,
+                            controller: controller,
                             statusFilter: 'Ongoing',
                           ),
                           TabBody(
-                            controller: ctWorkplace,
+                            controller: controller,
                             statusFilter: 'Completed',
                           ),
                         ],

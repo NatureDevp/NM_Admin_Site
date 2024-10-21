@@ -1,3 +1,5 @@
+import 'package:admin_new/models/md_request.dart';
+import 'package:admin_new/pages/request/sc_request_info.dart';
 import 'package:get/get.dart';
 
 import '../pages/auth/sc_login.dart';
@@ -12,11 +14,12 @@ class Routes {
   static get getLoginPage => '/login';
   static get getSignupPage => '/signup';
   static get getHomePage => '/home';
+  static get getRequestInfoPage => '/home/reqInfo';
 
   static List<GetPage> pages = [
     GetPage(
       name: getInitialPage,
-      page: () => const LandingPage(),
+      page: () => const HomePage(),
       transition: Transition.zoom,
     ),
 
@@ -24,12 +27,11 @@ class Routes {
       name: getLandingPage,
       page: () => const LandingPage(),
       transition: Transition.zoom,
+      transitionDuration: const Duration(milliseconds: 300),
     ),
     GetPage(
       name: getLoginPage,
       page: () => LoginPage(),
-      transition: Transition.fade,
-      transitionDuration: const Duration(milliseconds: 300),
     ),
     GetPage(
       name: getSignupPage,
@@ -43,11 +45,11 @@ class Routes {
       page: () => const HomePage(),
       transition: Transition.fade,
     ),
-    // GetPage(
-    //   name: getRequestListpage,
-    //   page: () => const RequestListPage(),
-    //   transition: Transition.cupertino,
-    // ),
+    GetPage(
+      name: getRequestInfoPage,
+      page: () => const RequestInfoPage(),
+      transition: Transition.cupertino,
+    ),
     // GetPage(
     //   name: getWorkplacepage,
     //   page: () => const WorkplacePage(),

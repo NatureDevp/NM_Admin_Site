@@ -1,3 +1,4 @@
+import 'package:admin_new/utils/_local_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -38,7 +39,7 @@ class HomePage extends GetView<HomePageController> {
 
       if (controller.isRedirecting.value) {
         Future.delayed(const Duration(seconds: 2), () {
-          Get.offNamed(Routes.getInitialPage); // Redirect to the landing page
+          controller.redirectToLandingPage();
         });
         return const Scaffold(
           body: Center(
@@ -58,7 +59,7 @@ class HomePage extends GetView<HomePageController> {
 
       if (controller.errorMessage.value.isNotEmpty) {
         Future.delayed(const Duration(seconds: 2), () {
-          Get.offNamed(Routes.getInitialPage); // Redirect to the landing page
+          controller.redirectToLandingPage();
         });
         return Scaffold(
           body: Center(

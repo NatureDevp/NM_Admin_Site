@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/request/request.dart';
 
 import '../api/api_request.dart';
 import '../models/md_request.dart';
+import '../utils/_routes.dart';
 
 class RequestController extends GetxController {
   @override
@@ -30,6 +32,7 @@ class RequestController extends GetxController {
   var isLoading = false.obs;
   var pendingRequestData = <RequestPlant>[].obs;
   var totalRequestPants = 0.obs;
+  Rxn<RequestPlant?> selectedRequest = Rxn<RequestPlant>();
 
   Future<void> _loadRequests() async {
     isLoading.value = true;
@@ -58,6 +61,10 @@ class RequestController extends GetxController {
     errorMessage.value = '';
   }
 
+  void selectRequest(RequestPlant request) {
+    selectedRequest.value = request;
+  }
+
   Future<void> _fetchRequests() async {
     var result = await APIRequestPlant.fetchRequests();
 
@@ -66,7 +73,7 @@ class RequestController extends GetxController {
       return;
     }
     if (result['success'] == false) {
-      errorMessage.value = result['message'];
+      errorMessage.value = 'Failed to load requests';
 
       return;
     }

@@ -38,7 +38,7 @@ Future<Map<String, dynamic>?> validateStatus(http.Response response) async {
         name: 'API ${response.statusCode}:',
       );
       return {
-        'status': false,
+        'success': false,
         'message': json.decode(response.body)['message'],
       };
 

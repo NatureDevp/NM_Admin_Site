@@ -13,6 +13,7 @@ import '../utils/_routes.dart';
 
 class LandingPageController extends GetxController {
   //
+
   @override
   void onReady() {
     // TODO: implement onReady
@@ -31,7 +32,13 @@ class LandingPageController extends GetxController {
       }
 
       getSessionToken().then((sessionToken) async {
-        Get.offNamed(Routes.getHomePage, arguments: sessionToken!);
+        var result = await APIAuth.checkLoginStatus(sessionToken!);
+
+        if (result == null || result['success'] == false) {
+          deleteSessionToken();
+          return;
+        }
+        Get.offNamed(Routes.getHomePage);
       });
     });
   }

@@ -1,7 +1,9 @@
+import 'package:admin_new/pages/request/sc_request_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 
+import 'pages/home/sc_home.dart';
 import 'utils/_init.dart';
 import 'utils/_routes.dart';
 
