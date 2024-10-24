@@ -76,7 +76,7 @@ class SignupPage extends GetView<SignupPageController> {
         );
         return;
       }
-      var auth = Authorization.fromJson(results['data'][0], null);
+      var auth = Authorization.fromJson(results['data'], null);
       // Show success message
       QuickAlert.show(
         context: Get.context!,

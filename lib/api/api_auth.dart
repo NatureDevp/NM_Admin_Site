@@ -70,7 +70,6 @@ class APIAuth {
         },
         body: json.encode(credentials.toJson()),
       );
-
       return validateStatus(response);
 
       //

@@ -1,4 +1,3 @@
-import 'package:admin_new/models/md_request.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,14 +8,16 @@ class RequestInfoPage extends GetView<RequestController> {
 
   @override
   Widget build(BuildContext context) {
+    var request = controller.selectedRequest();
     return Scaffold(
       appBar: AppBar(
+        surfaceTintColor: Colors.white,
         title: const Text('Request Information'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Center(
             child: Container(
               width: 800,
               padding: const EdgeInsets.all(20.0),
@@ -34,11 +35,6 @@ class RequestInfoPage extends GetView<RequestController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Request Information',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -47,28 +43,18 @@ class RequestInfoPage extends GetView<RequestController> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            _buildTextField('ID:', request.id.toString()),
                             _buildTextField(
-                                'ID:',
-                                controller.selectedRequest.value!.id
-                                    .toString()),
+                                'User_ID:', request.user_id.toString()),
+                            _buildTextField('Plant Name:', request.plant_name),
                             _buildTextField(
-                                'User_ID:',
-                                controller.selectedRequest.value!.user_id
-                                    .toString()),
-                            _buildTextField('Plant Name:',
-                                controller.selectedRequest.value!.plant_name),
-                            _buildTextField(
-                                'Scientific Name:',
-                                controller
-                                    .selectedRequest.value!.scientific_name),
-                            _buildMultiLineTextField('Plant Description:',
-                                controller.selectedRequest.value!.description),
+                                'Scientific Name:', request.scientific_name),
+                            _buildMultiLineTextField(
+                                'Plant Description:', request.description),
                             _buildTextField(
                               'Handle by:',
-                              controller.selectedRequest.value!.handle_by !=
-                                      null
-                                  ? controller.selectedRequest.value!.handle_by
-                                      .toString()
+                              request.handle_by != null
+                                  ? request.handle_by.toString()
                                   : 'None',
                             ),
                           ],
@@ -94,14 +80,14 @@ class RequestInfoPage extends GetView<RequestController> {
                   Row(
                     children: [
                       Expanded(
-                        child: _buildTextField('Last Update:',
-                            controller.selectedRequest.value!.last_updated),
+                        child: _buildTextField(
+                            'Last Update:', request.last_updated),
                       ),
                       const SizedBox(width: 20),
                       Expanded(
                         child: _buildTextField(
                           'Date Created:',
-                          controller.selectedRequest.value!.date_created,
+                          request.date_created,
                         ),
                       ),
                     ],

@@ -6,7 +6,7 @@ class Authorization {
   String email;
   String? password;
   String? passwordConfirmation;
-  String type = 'admin';
+  String role = 'Admin';
   String? accessToken;
 
   Authorization({
@@ -14,7 +14,7 @@ class Authorization {
     this.lastName,
     required this.email,
     this.password,
-    this.type = 'admin',
+    this.role = 'Admin',
     this.passwordConfirmation,
     this.accessToken,
   });
@@ -25,12 +25,12 @@ class Authorization {
           lastName ?? '${Random().nextInt(999)}',
         ),
         'email': formatEmail(email),
-        'type': 'admin',
+        'role': 'Admin',
         'password': password,
         'password_confirmation': passwordConfirmation,
       };
 
-  factory Authorization.fromJson(Map<dynamic, dynamic> json, String? token) {
+  factory Authorization.fromJson(Map<String, dynamic> json, String? token) {
     String fname = json['name'].toString().split(' ').first;
     String lname = json['name'].toString().split(' ').last;
 
@@ -39,7 +39,7 @@ class Authorization {
       firstName: fname,
       lastName: lname,
       email: json['email'],
-      type: json['type'],
+      role: json['role'],
       accessToken: token,
     );
   }
@@ -57,6 +57,6 @@ class Authorization {
   String capitalize(String text) {
     // Capitalizes the first letter of a string
     if (text.isEmpty) return '';
-    return text[0].toUpperCase() + text.substring(1);
+    return text[0].toUpperCase() + text.substring(1).toLowerCase();
   }
 }

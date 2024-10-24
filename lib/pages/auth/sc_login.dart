@@ -74,6 +74,7 @@ class LoginPage extends GetView<LoginPageController> {
         return;
       }
 
+      print('hhi');
       var auth = Authorization.fromJson(
         results['data'][0],
         results['access_token'],
@@ -90,7 +91,7 @@ class LoginPage extends GetView<LoginPageController> {
         onConfirmBtnTap: () async {
           Navigator.of(Get.context!).pop();
           await saveSessionToken(auth.accessToken!);
-          Get.offAllNamed(Routes.getHomePage, arguments: auth);
+          Get.offAllNamed(Routes.getHomePage);
         },
       );
     } catch (error) {
@@ -103,6 +104,7 @@ class LoginPage extends GetView<LoginPageController> {
         confirmBtnText: 'Ok',
         confirmBtnColor: CustomColors.error.normal,
         onConfirmBtnTap: () {
+          Navigator.of(Get.context!).pop();
           Navigator.of(Get.context!).pop();
         },
       );

@@ -1,4 +1,4 @@
-import 'package:admin_new/models/md_request.dart';
+import 'package:admin_new/pages/plant/sc_plant_form.dart';
 import 'package:admin_new/pages/request/sc_request_info.dart';
 import 'package:get/get.dart';
 
@@ -6,7 +6,6 @@ import '../pages/auth/sc_login.dart';
 import '../pages/auth/sc_signup.dart';
 import '../pages/home/sc_home.dart';
 import '../pages/start/sc_landing.dart';
-import '_init.dart';
 
 class Routes {
   static get getInitialPage => '/';
@@ -15,6 +14,7 @@ class Routes {
   static get getSignupPage => '/signup';
   static get getHomePage => '/home';
   static get getRequestInfoPage => '/home/reqInfo';
+  static get getCreatePlantPage => '/home/createPlant';
 
   static List<GetPage> pages = [
     GetPage(
@@ -22,7 +22,6 @@ class Routes {
       page: () => const HomePage(),
       transition: Transition.zoom,
     ),
-
     GetPage(
       name: getLandingPage,
       page: () => const LandingPage(),
@@ -39,7 +38,6 @@ class Routes {
       transition: Transition.fade,
       transitionDuration: const Duration(milliseconds: 300),
     ),
-
     GetPage(
       name: getHomePage,
       page: () => const HomePage(),
@@ -50,10 +48,10 @@ class Routes {
       page: () => const RequestInfoPage(),
       transition: Transition.cupertino,
     ),
-    // GetPage(
-    //   name: getWorkplacepage,
-    //   page: () => const WorkplacePage(),
-    //   transition: Transition.cupertino,
-    // ),
+    GetPage(
+      name: getCreatePlantPage,
+      page: () => PlantFormPage(),
+      transition: Transition.cupertino,
+    ),
   ];
 }

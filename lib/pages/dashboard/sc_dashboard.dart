@@ -3,52 +3,46 @@ import 'package:admin_new/controllers/ct_request.dart';
 import 'package:admin_new/controllers/ct_workplace.dart';
 import 'package:admin_new/data/dt_workplace.dart';
 import 'package:admin_new/models/md_request.dart';
-import 'package:admin_new/pages/request/sc_request_info.dart';
 import 'package:admin_new/utils/_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-
 import '../../utils/_colors.dart';
 import '../../utils/_screen_sizes.dart';
-import '../request/sc_list_request.dart';
 
 class Dashboard extends StatelessWidget {
   Dashboard({super.key});
-  @override
+
   late Screen screen;
 
   @override
   Widget build(BuildContext context) {
-    //
-
-    return LayoutBuilder(builder: (context, constraints) {
-      screen = Screen.constraints(constraints);
-
-      //
-      return SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(screen.width * 0.03),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _dataChart(),
-              Gap(screen.width * 0.030),
-              _divider(),
-              Gap(screen.width * 0.030),
-              _tableTitleStyle(),
-              Gap(screen.width * 0.009),
-              const WorkplaceTable(),
-            ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        screen = Screen.constraints(constraints);
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(screen.width * 0.03),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildDataChart(),
+                Gap(screen.width * 0.03),
+                _buildDivider(),
+                Gap(screen.width * 0.03),
+                _buildTableTitle(),
+                Gap(screen.width * 0.009),
+                _workplaceTable(),
+              ],
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
-  Widget _tableTitleStyle() {
+  Widget _buildTableTitle() {
     return Container(
       padding: const EdgeInsets.all(5),
       child: Row(
@@ -70,7 +64,19 @@ class Dashboard extends StatelessWidget {
     );
   }
 
-  Widget _divider() {
+  Widget _workplaceTable() {
+    var controller = Get.find<WorkplaceController>();
+    return Obx(() {
+      return SfDataGrid(
+        source: WorkplaceDataSource(controller.workplaceRequests.value),
+        allowSorting: true,
+        columnWidthMode: ColumnWidthMode.fill,
+        columns: workplaceColumns(),
+      );
+    });
+  }
+
+  Widget _buildDivider() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: screen.width * 0.2),
       child: Divider(
@@ -80,162 +86,102 @@ class Dashboard extends StatelessWidget {
     );
   }
 
-//
-  Widget _dataChart() {
-    var ctRequest = Get.find<RequestController>();
-    var ctPlant = Get.find<PlantController>();
+  Widget _buildDataChart() {
+    final ctRequest = Get.find<RequestController>();
+    final ctPlant = Get.find<PlantController>();
+
     return Row(
-      mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            //
             Obx(
-              () => DashboardCard(
-                screen,
-                cardTitle: 'Plants',
-                cardSubtitle: 'Active Plants',
-                titleBackground: CustomColors.primary.lighter,
+              () => _buildDashboardCard(
+                title: 'Plants',
+                subtitle: 'Active Plants',
+                titleBgColor: CustomColors.primary.lighter,
                 imagePath: 'assets/images/image1.png',
                 barColor: CustomColors.primary.normal,
-                currentBarCount: ctPlant.activePlantCount.value.toDouble(),
-                totalBarCount: ctPlant.totalPants.toDouble(),
-                cardBackgroud: CustomColors.light.normal,
-                borderColor: CustomColors.primary.normal,
+                currentCount: ctPlant.activePlantCount.value.toDouble(),
+                totalCount: ctPlant.totalPants.toDouble(),
               ),
             ),
-
-            //
             Gap(screen.width * 0.01),
-
-            //
-            DashboardCard(
-              screen,
-              cardTitle: 'Users',
-              cardSubtitle: 'Active Users',
-              titleBackground: CustomColors.secondary.lighter,
+            _buildDashboardCard(
+              title: 'Users',
+              subtitle: 'Active Users',
+              titleBgColor: CustomColors.secondary.lighter,
               imagePath: 'assets/images/image2.png',
               barColor: CustomColors.secondary.normal,
-              currentBarCount: 1000,
-              totalBarCount: 1300,
-              cardBackgroud: CustomColors.light.normal,
-              borderColor: CustomColors.secondary.normal,
+              currentCount: 1000,
+              totalCount: 1300,
             ),
           ],
         ),
-
-        //
-        DashboardRequestCard(
-          screen,
-          cardTitle: 'New Request',
-          titleBackground: CustomColors.dark.lighter,
-          cardBackgroud: CustomColors.light.normal,
-          borderColor: CustomColors.dark.medium,
-          onSeeAll: () {},
-        ),
+        _buildDashboardRequestCard(),
       ],
     );
   }
-}
 
-class DashboardCard extends StatelessWidget {
-  DashboardCard(
-    this.screen, {
-    super.key,
-    required this.cardTitle,
-    required this.titleBackground,
-    required this.barColor,
-    required this.currentBarCount,
-    required this.totalBarCount,
-    required this.cardSubtitle,
-    required this.imagePath,
-    required this.cardBackgroud,
-    required this.borderColor,
-  });
-  String cardTitle;
-  String cardSubtitle;
-  Color cardBackgroud;
-  Color borderColor;
-  Color titleBackground;
-  String imagePath;
-  Color barColor;
-  double currentBarCount;
-  double totalBarCount;
-  double barsize = 0.0;
-  Screen screen;
-  @override
-  Widget build(BuildContext context) {
-    //
+  Widget _buildDashboardCard({
+    required String title,
+    required String subtitle,
+    required Color titleBgColor,
+    required String imagePath,
+    required Color barColor,
+    required double currentCount,
+    required double totalCount,
+  }) {
+    final cardWidth = (screen.width / 2) - 110;
+    final barSize =
+        currentCount / (totalCount == 0 ? 1 : totalCount) * cardWidth;
+
     return Container(
       padding: EdgeInsets.all(screen.width * 0.01),
-      width: (screen.width / 2) - 110,
+      width: cardWidth,
       decoration: BoxDecoration(
-        color: cardBackgroud,
+        color: CustomColors.light.normal,
         borderRadius: BorderRadius.circular(screen.width * 0.012),
-        border: Border.all(
-          color: borderColor,
-        ),
+        border: Border.all(color: barColor),
       ),
-
-      //
       child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
             flex: 3,
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                barsize = constraints.maxWidth;
-
-                //
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    cardTitleStyle(),
-                    Gap(screen.width * 0.02),
-                    barGraph(),
-                    Gap(screen.width * 0.01),
-                    cardData(),
-                  ],
-                );
-              },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildCardTitle(title, titleBgColor),
+                Gap(screen.width * 0.02),
+                _buildBarGraph(barSize, barColor),
+                Gap(screen.width * 0.01),
+                _buildCardData(currentCount, totalCount, subtitle),
+              ],
             ),
           ),
-
-          //
           Gap(screen.width * 0.02),
-
-          //
           Expanded(
             flex: 1,
-            child: Image.asset(
-              imagePath,
-            ),
+            child: Image.asset(imagePath),
           ),
         ],
       ),
     );
   }
 
-  Widget cardTitleStyle() {
+  Widget _buildCardTitle(String title, Color bgColor) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: screen.width * 0.005,
         vertical: screen.width * 0.002,
       ),
       decoration: BoxDecoration(
-        color: titleBackground,
+        color: bgColor,
         borderRadius: BorderRadius.circular(5),
       ),
       child: Text(
-        cardTitle,
+        title,
         style: TextStyle(
           color: CustomColors.dark.normal,
           fontSize: screen.width * 0.01,
@@ -245,47 +191,32 @@ class DashboardCard extends StatelessWidget {
     );
   }
 
-  //
-  Widget barGraph() {
+  Widget _buildBarGraph(double width, Color color) {
     return Container(
       height: screen.width * 0.0045,
-      alignment: Alignment.centerLeft,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(screen.width * 0.004),
         color: CustomColors.dark.medium,
       ),
       child: Container(
-        width: calculatePercentage(),
+        width: width,
         height: screen.width * 0.0045,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(screen.width * 0.004),
-          color: barColor,
+          color: color,
         ),
       ),
     );
   }
 
-  double calculatePercentage() {
-    double tempTOTAL = 0;
-    if (totalBarCount == 0) {
-      tempTOTAL = 1;
-    } else {
-      tempTOTAL = totalBarCount;
-    }
-    double totalPercentage = (currentBarCount / tempTOTAL);
-    totalPercentage = (barsize * totalPercentage);
-    return totalPercentage;
-  }
-
-  Widget cardData() {
+  Widget _buildCardData(
+      double currentCount, double totalCount, String subtitle) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RichText(
-          textAlign: TextAlign.left,
           text: TextSpan(
-            text: '$currentBarCount',
+            text: '$currentCount',
             style: TextStyle(
               color: Colors.black,
               fontSize: screen.width * 0.03,
@@ -293,7 +224,7 @@ class DashboardCard extends StatelessWidget {
             ),
             children: [
               TextSpan(
-                text: '/$totalBarCount',
+                text: '/$totalCount',
                 style: TextStyle(
                   color: CustomColors.dark.medium,
                   fontSize: screen.width * 0.015,
@@ -304,7 +235,7 @@ class DashboardCard extends StatelessWidget {
           ),
         ),
         Text(
-          cardSubtitle,
+          subtitle,
           style: TextStyle(
             color: CustomColors.dark.medium,
             fontSize: screen.width * 0.01,
@@ -314,72 +245,32 @@ class DashboardCard extends StatelessWidget {
       ],
     );
   }
-}
 
-class WorkplaceTable extends GetView<WorkplaceController> {
-  const WorkplaceTable({
-    super.key,
-  });
-  @override
-  Widget build(BuildContext context) {
-    return Obx(() {
-      return SfDataGrid(
-        source: WorkplaceDataSource(controller.workplaceRequests.value),
-        allowSorting: true,
-        columnWidthMode: ColumnWidthMode.fill,
-        columns: workplaceColumns(),
-      );
-    });
-  }
-}
-//===============================
+  Widget _buildDashboardRequestCard() {
+    final cardWidth = (screen.width / 2) - 110;
 
-class DashboardRequestCard extends GetView<RequestController> {
-  DashboardRequestCard(
-    this.screen, {
-    super.key,
-    required this.cardTitle,
-    required this.titleBackground,
-    required this.cardBackgroud,
-    required this.borderColor,
-    required this.onSeeAll,
-  });
-  String cardTitle;
-  Color cardBackgroud;
-  Color borderColor;
-  Color titleBackground;
-  Function()? onSeeAll;
-  Screen screen;
-  @override
-  Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(screen.width * 0.01),
-      width: (screen.width / 2) - 110,
+      width: cardWidth,
       height: screen.width * 0.258,
       decoration: BoxDecoration(
-        color: cardBackgroud,
+        color: CustomColors.light.normal,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: borderColor,
-        ),
+        border: Border.all(color: CustomColors.dark.medium),
       ),
-
-      //
       child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _cardTitleStye(),
-          Expanded(child: _cardBody()),
+          _buildRequestCardTitle('New Request', CustomColors.dark.lighter),
+          Expanded(
+            child: _buildRequestCardBody(),
+          ),
         ],
       ),
     );
   }
 
-  Widget _cardTitleStye() {
+  Widget _buildRequestCardTitle(String title, Color bgColor) {
     return Row(
-      mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
@@ -388,11 +279,11 @@ class DashboardRequestCard extends GetView<RequestController> {
             vertical: screen.width * 0.002,
           ),
           decoration: BoxDecoration(
-            color: titleBackground,
+            color: bgColor,
             borderRadius: BorderRadius.circular(screen.width * 0.004),
           ),
           child: Text(
-            cardTitle,
+            title,
             style: TextStyle(
               color: CustomColors.dark.normal,
               fontSize: screen.width * 0.01,
@@ -401,13 +292,12 @@ class DashboardRequestCard extends GetView<RequestController> {
           ),
         ),
         TextButton(
-          onPressed: onSeeAll,
+          onPressed: () {},
           child: Text(
             'See all',
             style: TextStyle(
               color: CustomColors.dark.normal,
               fontSize: screen.width * 0.01,
-              fontWeight: FontWeight.normal,
             ),
           ),
         ),
@@ -415,86 +305,70 @@ class DashboardRequestCard extends GetView<RequestController> {
     );
   }
 
-  Widget _cardBody() {
-    return LayoutBuilder(builder: (context, constraint) {
-      return SizedBox(
-          height: constraint.maxHeight,
-          child: Obx(() {
-            return ListView.builder(
-                padding: EdgeInsets.symmetric(vertical: screen.width * 0.01),
-                shrinkWrap: true,
-                itemCount: controller.pendingRequestData.value.length,
-                itemBuilder: (_, index) {
-                  List<RequestPlant> requests =
-                      controller.pendingRequestData.value;
-                  return InkWell(
-                    onTap: () {
-                      controller.selectRequest(requests[index]);
-                      Get.toNamed(Routes.getRequestInfoPage);
-                    },
-                    child: _cardTile(requests[index]),
-                  );
-                });
-          }));
-    });
+  Widget _buildRequestCardBody() {
+    var controller = Get.find<RequestController>();
+    return Obx(
+      () => ListView.builder(
+        padding: EdgeInsets.symmetric(vertical: screen.width * 0.01),
+        itemCount: controller.pendingRequestData.value.length,
+        itemBuilder: (_, index) {
+          final request = controller.pendingRequestData.value[index];
+          return _buildRequestCardTile(request);
+        },
+      ),
+    );
   }
 
-  Widget _cardTile(RequestPlant request) {
-    return Card(
-      color: CustomColors.light.normal,
-      elevation: 2,
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: screen.width * 0.01,
-          horizontal: screen.width * 0.02,
-        ),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: _plantDetail(request),
-            ),
-            Align(
-              alignment: const Alignment(0.3, 0),
-              child: _requestDetail(request),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: _banner(),
-            ),
-          ],
+  Widget _buildRequestCardTile(RequestPlant request) {
+    var controller = Get.find<RequestController>();
+    return GestureDetector(
+      onTap: () {
+        controller.selectedId.value = request.id;
+        Get.toNamed(Routes.getRequestInfoPage);
+      },
+      child: Card(
+        color: CustomColors.light.normal,
+        elevation: 2,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: screen.width * 0.01,
+            horizontal: screen.width * 0.02,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildPlantDetail(request),
+              _buildRequestDetail(request),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _plantDetail(RequestPlant request) {
+  Widget _buildPlantDetail(RequestPlant request) {
     return Row(
       children: [
         Image.asset(
           'assets/images/image1.png',
           height: screen.width * 0.03,
         ),
-        Gap(screen.width * 0.009),
+        Gap(screen.width * 0.02),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
           children: [
             Text(
               request.plant_name,
               style: TextStyle(
-                fontSize: screen.width * 0.009,
+                fontSize: screen.width * 0.012,
                 fontWeight: FontWeight.bold,
-                color: CustomColors.dark.normal,
               ),
             ),
             Text(
               request.scientific_name,
               style: TextStyle(
-                fontSize: screen.width * 0.009,
-                fontWeight: FontWeight.w400,
-                color: CustomColors.dark.normal,
+                fontSize: screen.width * 0.01,
+                color: CustomColors.dark.medium,
               ),
             ),
           ],
@@ -503,33 +377,24 @@ class DashboardRequestCard extends GetView<RequestController> {
     );
   }
 
-//
-  Widget _requestDetail(RequestPlant request) {
+  Widget _buildRequestDetail(RequestPlant request) {
     return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            request.date_created,
-            style: TextStyle(
-              fontSize: screen.width * 0.008,
-              fontWeight: FontWeight.w800,
-              color: CustomColors.dark.normal,
-            ),
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(
+          request.date_created,
+          style: TextStyle(
+            fontSize: screen.width * 0.01,
+            color: CustomColors.dark.medium,
           ),
-          Text(
-            'Requested date',
-            style: TextStyle(
-              fontSize: screen.width * 0.009,
-              fontWeight: FontWeight.w300,
-              color: CustomColors.dark.medium,
-            ),
-          ),
-        ]);
+        ),
+        Gap(screen.width * 0.004),
+        _banner(request.status),
+      ],
+    );
   }
 
-//
-  Widget _banner() {
+  Widget _banner(String status) {
     return Container(
       padding: EdgeInsets.all(screen.width * 0.003),
       decoration: BoxDecoration(
@@ -537,7 +402,7 @@ class DashboardRequestCard extends GetView<RequestController> {
         borderRadius: BorderRadius.circular(screen.width * 0.005),
       ),
       child: Text(
-        'New',
+        status,
         style: TextStyle(
           color: Colors.white,
           fontSize: screen.width * 0.009,

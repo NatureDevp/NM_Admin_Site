@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../models/md_plant.dart';
@@ -67,7 +65,7 @@ List<DataGridRow> plantRows(List<Plants> plants) {
             ),
             DataGridCell<String>(
               columnName: col_plantPicture,
-              value: plant.image_url,
+              value: plant.cover,
             ),
             DataGridCell<String>(
               columnName: col_plantStatus,

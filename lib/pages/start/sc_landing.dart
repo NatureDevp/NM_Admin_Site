@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
-import '../../utils/_local_storage.dart';
 import '../../utils/_routes.dart';
 import '../../utils/_screen_sizes.dart';
 

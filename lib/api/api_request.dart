@@ -10,7 +10,7 @@ class APIRequestPlant {
   static Future<Map<String, dynamic>?> fetchRequests() async {
     //
 
-    final url = Uri.parse('${BASE_URL}api/v1/requests');
+    final url = Uri.parse('${BASE_URL}api/v2/requests');
     String accessToken = await getSessionToken() ?? '';
 
     //

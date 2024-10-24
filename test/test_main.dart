@@ -1,9 +1,9 @@
+import 'package:admin_new/pages/plant/sc_list_plant.dart';
+import 'package:admin_new/pages/start/sc_landing.dart';
+import 'package:admin_new/utils/_init.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
-
-import 'utils/_init.dart';
-import 'utils/_routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,8 +19,9 @@ class MainApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       initialBinding: RootBinding(),
-      initialRoute: Routes.getInitialPage,
-      getPages: Routes.pages,
+      home: const Scaffold(
+        body: PlantListPage(),
+      ),
     );
   }
 }

@@ -87,7 +87,7 @@ class PlantController extends GetxController {
 
   void _activeCounter() {
     activePlantCount.value = plantData.value
-        .where((element) => element.status.toLowerCase() == 'active')
+        .where((element) => element.status == 'Active')
         .toList()
         .length;
   }

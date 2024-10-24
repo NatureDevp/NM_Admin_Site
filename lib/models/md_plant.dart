@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:intl/intl.dart';
 
 class Plants {
@@ -5,10 +7,11 @@ class Plants {
     required this.id,
     required this.name,
     required this.scientific_name,
-    required this.image_url,
+    required this.cover,
     required this.likes,
     required this.status,
     required this.description,
+    required this.ailment,
     required this.date_created,
     required this.last_updated,
   });
@@ -16,10 +19,11 @@ class Plants {
   final int id;
   final String name;
   final String scientific_name;
-  final String image_url;
+  final String cover;
   final String description;
   final int likes;
   final String status;
+  final List<String> ailment;
   final String date_created;
   final String last_updated;
 
@@ -28,13 +32,26 @@ class Plants {
       id: json['id'],
       name: _arrangeName(json['name']),
       scientific_name: json['scientific'],
-      image_url: json['image'],
-      likes: json['likes'],
+      cover: json['cover'],
+      likes: json['like'],
       status: json['status'],
+      ailment: json['ailment'].toString().split(','),
       description: json['description'],
       date_created: _parseToDate(json['created_at']),
       last_updated: _parseToDate(json['updated_at']),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['scientific'] = scientific_name;
+    data['status'] = status;
+    data['ailment'] = ailment.join(',');
+    data['description'] = description;
+    data['created_at'] = date_created;
+    data['updated_at'] = last_updated;
+    return data;
   }
 
   static String _parseToDate(String? dateStr) {

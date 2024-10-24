@@ -1,17 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:typed_data';
+
+import 'package:admin_new/models/md_plant.dart';
 
 import '../utils/_local_storage.dart';
 import 'api_status_code.dart';
 import 'api_url.dart';
 import 'package:http/http.dart' as http;
+import 'dart:html' as html;
 
 class APIPlant {
   static Future<Map<String, dynamic>?> fetchPlants() async {
     //
 
-    final url = Uri.parse('${BASE_URL}api/v1/plants');
+    final url = Uri.parse('${BASE_URL}api/v2/plants');
     String accessToken = await getSessionToken() ?? '';
 
     //
@@ -29,38 +33,71 @@ class APIPlant {
     }
   }
 
-  Stream<List<dynamic>> fetchPlantsStream() async* {
-    final url = Uri.parse(
-        'http://your_api_endpoint_here'); // Replace with your API endpoint
-    final request = http.Request('GET', url);
+// Assuming your Plants class has a property for the image file
+  static Future<Map<String, dynamic>?> uploadPlants(
+    Plants plant,
+    Map<String, html.File> cover,
+    List<Map<String, html.File>> images,
+  ) async {
+    final url = Uri.parse('${BASE_URL}api/v2/plants');
+    String accessToken = await getSessionToken() ?? '';
 
-    // Send the request and get a streamed response
-    final streamedResponse = await request.send();
+    try {
+      // Prepare multipart request
+      var request = http.MultipartRequest('POST', url);
+      request.headers['Authorization'] = 'Bearer $accessToken';
+      request.headers['Content-Type'] = 'multipart/form-data';
+      request.headers['Accept'] = 'application/json';
+      request.headers['ngrok-skip-browser-warning'] = 'true';
 
-    if (streamedResponse.statusCode == 200) {
-      List<dynamic> plants = [];
+      // Add plant data as fields
+      request.fields['name'] = plant.name;
+      request.fields['scientific'] = plant.scientific_name;
+      request.fields['description'] = plant.description;
+      request.fields['status'] = plant.status;
+      request.fields['ailment'] = plant.ailment.join(',');
 
-      // Stream data by parsing each chunk of the streamed response
-      await for (var chunk in streamedResponse.stream.transform(utf8.decoder)) {
-        try {
-          // Parse each chunk and add to the list of plants
-          final decodedData = json.decode(chunk);
+      final reader = html.FileReader();
+      reader.readAsArrayBuffer(cover.values.first);
+      await reader.onLoad.first;
 
-          if (decodedData is List) {
-            plants.addAll(
-                decodedData); // If the response is a list, add all items
-          } else {
-            plants.add(decodedData); // Otherwise, add the item directly
-          }
+      final data = reader.result as Uint8List;
+      request.files.add(
+        http.MultipartFile.fromBytes(
+          'cover',
+          data,
+          filename: cover.values.first.name,
+        ),
+      );
 
-          yield plants; // Emit the updated list to refresh the UI
-        } catch (e) {
-          print('Error parsing chunk: $e');
-        }
-      }
-    } else {
-      throw Exception(
-          'Failed to load data with status: ${streamedResponse.statusCode}');
+      
+      // request.files.addAll(
+      //   images.map((image) {
+      //     final reader = html.FileReader();
+      //     Uint8List data = Uint8List(0);
+      //     reader.readAsArrayBuffer(image.values.first);
+      //     reader.onLoad.first.then((await) {
+      //       data = reader.result as Uint8List;
+      //     });
+
+          return http.MultipartFile.fromBytes(
+            'images[]',
+            data,
+            filename: image.values.first.name,
+          );
+        }),
+      )
+
+      String responseData = '';
+      final response = await request.send();
+      response.stream.listen((data) {
+        responseData = utf8.decode(data);
+      });
+
+      return await validateStatus(json.decode(responseData));
+    } catch (e) {
+      log(': CLIENT ERROR', name: 'API', error: e);
+      return null;
     }
   }
 }

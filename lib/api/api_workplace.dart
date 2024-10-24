@@ -10,7 +10,7 @@ class APIWorkplace {
   static Future<Map<String, dynamic>?> fetchWorkplace(int id) async {
     //
 
-    final url = Uri.parse('${BASE_URL}api/v1/requests/workplace/$id');
+    final url = Uri.parse('${BASE_URL}api/v2/requests/workplace/$id');
     String accessToken = await getSessionToken() ?? '';
 
     //

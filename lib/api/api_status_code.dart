@@ -16,6 +16,9 @@ Future<Map<String, dynamic>?> validateStatus(http.Response response) async {
         json.decode(response.body)['message'],
         name: 'API ${response.statusCode}:',
       );
+      log(
+        json.decode(response.body)['data'],
+      );
       return json.decode(response.body);
 
     case 204:
@@ -23,7 +26,7 @@ Future<Map<String, dynamic>?> validateStatus(http.Response response) async {
         json.decode(response.body)['message'],
         name: 'API ${response.statusCode}:',
       );
-      return null;
+      return json.decode(response.body);
 
     case 400:
       log(

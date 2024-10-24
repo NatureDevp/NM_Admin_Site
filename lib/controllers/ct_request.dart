@@ -32,7 +32,7 @@ class RequestController extends GetxController {
   var isLoading = false.obs;
   var pendingRequestData = <RequestPlant>[].obs;
   var totalRequestPants = 0.obs;
-  Rxn<RequestPlant?> selectedRequest = Rxn<RequestPlant>();
+  var selectedId = 0.obs;
 
   Future<void> _loadRequests() async {
     isLoading.value = true;
@@ -61,8 +61,9 @@ class RequestController extends GetxController {
     errorMessage.value = '';
   }
 
-  void selectRequest(RequestPlant request) {
-    selectedRequest.value = request;
+  RequestPlant selectedRequest() {
+    print('IDDDDDDDDDDDD: ${selectedId.value}');
+    return requestData.firstWhere((plant) => plant.id == selectedId.value);
   }
 
   Future<void> _fetchRequests() async {
